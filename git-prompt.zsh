@@ -56,7 +56,7 @@ function git_no_remote() {
 function git_branch_is_pushed() {
     if in_git_repos; then
         if git branch -r | grep "origin/master" >/dev/null 2>&1; then
-            git_no_remote || git diff-tree --quiet origin/master heads/master
+            git_no_remote || git diff-tree --quiet origin/master `git_current_branch`
         fi
     fi
 }
@@ -66,7 +66,7 @@ function git_branch_is_pushed() {
 function git_prompt_precmd() {
     local GITINFO=""
     if [ ! -z `git_current_branch` ]; then
-        GITINFO=" [`git_current_branch`"
+        GITINFO="`git_current_branch`"
         if ! git_status_is_clean; then
             GITINFO="$GITINFO*"
         fi
@@ -85,7 +85,7 @@ function git_prompt_precmd() {
         if ! git_single_remote; then
             GITINFO="$GITINFO®"
         fi
-        GITINFO="$GITINFO]"
+        GITINFO="\e[38;5;250m[\e[38;5;29m$GITINFO\e[38;5;250m]"
     fi
     echo $GITINFO
 }
